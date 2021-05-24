@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-int GetManaAmount(int id, spell_id sn);
+int GetManaAmount(PlayerStruct &player, spell_id sn);
 void UseMana(int id, spell_id sn);
 uint64_t GetSpellBitmask(int spellId);
 bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);

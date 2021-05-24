@@ -77,7 +77,7 @@ enum inv_body_loc : uint8_t {
 	NUM_INVLOC,
 };
 
-enum class player_graphic : uint16_t {
+enum class player_graphic : uint8_t {
 	Stand,
 	Walk,
 	Attack,
@@ -402,7 +402,7 @@ extern bool deathflag;
 extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
-void InitPlayerGFX(int pnum);
+void InitPlayerGFX(PlayerStruct &player);
 void ResetPlayerGFX(PlayerStruct &player);
 
 /**
@@ -451,6 +451,7 @@ void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, int x, int y);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
+void CalcPlrStaff(PlayerStruct &player);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
