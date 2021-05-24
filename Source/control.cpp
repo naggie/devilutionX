@@ -313,10 +313,9 @@ static void DrawSpell(const CelOutputBuffer &out)
 	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
-	if (spl != SPL_INVALID)
-		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, SpellITbl[spl]);
-	else
-		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, 27);
+
+	int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
+	DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, *pSpellCels, nCel);
 }
 
 static void PrintSBookHotkey(const CelOutputBuffer &out, int x, int y, const std::string &text)
@@ -1654,7 +1653,7 @@ void DrawSpellBook(const CelOutputBuffer &out)
 				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
 			} break;
 			default: {
-				int mana = GetManaAmount(myplr, sn) >> 6;
+				int mana = GetManaAmount(myPlayer, sn) >> 6;
 				int min;
 				int max;
 				GetDamageAmt(sn, &min, &max);
