@@ -3903,40 +3903,53 @@ void PrintItemDur(ItemStruct *x)
 	PrintItemInfo(x);
 }
 
+void ApplyHealingPotion()
+{
+	int l = GenerateRnd(player._pMaxHP / 4) + player._pMaxHP / 8;
+	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
+		l *= 2;
+	if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
+		l += l / 2;
+
+	player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
+	player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
+
+	drawhpflag = true;
+}
+
+void ApplyManaPotion()
+{
+	int l = GenerateRnd(player._pMaxMana / 4) + player._pMaxMana / 8;
+	if (player._pClass == HeroClass::Sorcerer)
+		l *= 2;
+	if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
+		l += l / 2;
+
+	if ((player._pIFlags & ISPL_NOMANA) != 0)
+		return;
+
+	player._pMana = std::min(player._pMana + l, player._pMaxMana);
+	player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
+
+	drawmanaflag = true;
+}
+
 void UseItem(int p, item_misc_id Mid, spell_id spl)
 {
-	int l, j;
-
 	auto &player = plr[p];
 
 	switch (Mid) {
 	case IMISC_HEAL:
-	case IMISC_FOOD:
-		l = GenerateRnd(player._pMaxHP / 4) + player._pMaxHP / 8;
-		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
-			l *= 2;
-		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
-			l += l / 2;
-		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
-		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
-		drawhpflag = true;
+		ApplyHealingPotion();
 		break;
+	case IMISC_FOOD:
 	case IMISC_FULLHEAL:
 		player._pHitPoints = player._pMaxHP;
 		player._pHPBase = player._pMaxHPBase;
 		drawhpflag = true;
 		break;
 	case IMISC_MANA:
-		l = GenerateRnd(player._pMaxMana / 4) + player._pMaxMana / 8;
-		if (player._pClass == HeroClass::Sorcerer)
-			l *= 2;
-		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
-			l += l / 2;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = std::min(player._pMana + l, player._pMaxMana);
-			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
-			drawmanaflag = true;
-		}
+		ApplyManaPotion();
 		break;
 	case IMISC_FULLMANA:
 		if ((player._pIFlags & ISPL_NOMANA) == 0) {
@@ -3968,24 +3981,8 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		}
 		break;
 	case IMISC_REJUV:
-		l = GenerateRnd(player._pMaxHP / 4) + player._pMaxHP / 8;
-		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
-			l *= 2;
-		if (player._pClass == HeroClass::Rogue)
-			l += l / 2;
-		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
-		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
-		drawhpflag = true;
-		l = GenerateRnd(player._pMaxMana / 4) + player._pMaxMana / 8;
-		if (player._pClass == HeroClass::Sorcerer)
-			l *= 2;
-		if (player._pClass == HeroClass::Rogue)
-			l += l / 2;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = std::min(player._pMana + l, player._pMaxMana);
-			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
-			drawmanaflag = true;
-		}
+		ApplyHealingPotion();
+		ApplyManaPotion();
 		break;
 	case IMISC_FULLREJUV:
 		player._pHitPoints = player._pMaxHP;
