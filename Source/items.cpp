@@ -3903,7 +3903,7 @@ void PrintItemDur(ItemStruct *x)
 	PrintItemInfo(x);
 }
 
-void ApplyHealingPotion()
+void ApplyHealingPotion(PlayerStruct &player)
 {
 	int l = GenerateRnd(player._pMaxHP / 4) + player._pMaxHP / 8;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
@@ -3917,7 +3917,7 @@ void ApplyHealingPotion()
 	drawhpflag = true;
 }
 
-void ApplyManaPotion()
+void ApplyManaPotion(PlayerStruct &player)
 {
 	int l = GenerateRnd(player._pMaxMana / 4) + player._pMaxMana / 8;
 	if (player._pClass == HeroClass::Sorcerer)
@@ -3940,7 +3940,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 
 	switch (Mid) {
 	case IMISC_HEAL:
-		ApplyHealingPotion();
+		ApplyHealingPotion(player);
 		break;
 	case IMISC_FOOD:
 	case IMISC_FULLHEAL:
@@ -3949,7 +3949,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		drawhpflag = true;
 		break;
 	case IMISC_MANA:
-		ApplyManaPotion();
+		ApplyManaPotion(player);
 		break;
 	case IMISC_FULLMANA:
 		if ((player._pIFlags & ISPL_NOMANA) == 0) {
@@ -3981,8 +3981,8 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		}
 		break;
 	case IMISC_REJUV:
-		ApplyHealingPotion();
-		ApplyManaPotion();
+		ApplyHealingPotion(player);
+		ApplyManaPotion(player);
 		break;
 	case IMISC_FULLREJUV:
 		player._pHitPoints = player._pMaxHP;
